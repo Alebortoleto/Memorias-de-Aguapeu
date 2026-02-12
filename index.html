@@ -159,12 +159,21 @@
     </div>
 
 <script>
-    // Gerenciamento de Senha
+    // Sistema de Login
     function loginAdmin() {
         const senha = prompt("Acesso MONGBeach - Digite a senha:");
         if (senha === "123Pin567Pin") {
-            document.getElementById('admin-panel').style.display = 'block';
+            const painel = document.getElementById('admin-panel');
+            painel.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Cria a área de aprovação se ela não existir
+            if (!document.getElementById('area-aprovacao-fotos')) {
+                const divAprovacao = document.createElement('div');
+                divAprovacao.id = 'area-aprovacao-fotos';
+                divAprovacao.innerHTML = '<h3 style="margin-top:20px; color:red;">📥 Fotos para Aprovar:</h3><div id="lista-espera" style="display:flex; flex-wrap:wrap; gap:10px;"></div>';
+                painel.appendChild(divAprovacao);
+            }
         } else {
             alert("Senha incorreta.");
         }
@@ -174,49 +183,40 @@
         document.getElementById('admin-panel').style.display = 'none';
     }
 
-    // Lógica de Upload de Fotos (Sessão 07)
-    const inputFoto = document.getElementById('foto-upload');
-    const galeriaVisitantes = document.getElementById('galeria-visitantes');
-    const listaGestor = document.createElement('div'); // Criando área no painel do gestor
-    listaGestor.id = "gestor-lista-fotos";
-    document.getElementById('admin-panel').appendChild(listaGestor);
-
-    inputFoto.addEventListener('change', function() {
-        const files = this.files;
-        if (files.length > 3) {
-            alert("Máximo de 3 fotos permitido.");
-            return;
-        }
-
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Criar miniatura para o GESTOR aprovar
-                const divPreview = document.createElement('div');
-                divPreview.style = "display:inline-block; margin:10px; border:1px solid #ccc; padding:5px; text-align:center;";
-                divPreview.innerHTML = `
-                    <img src="${e.target.result}" style="width:100px; height:100px; object-fit:cover; display:block;">
-                    <button onclick="aprovarFoto('${e.target.result}', this)" style="background:green; color:white; border:none; margin-top:5px; cursor:pointer;">Aprovar</button>
-                    <button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; margin-top:5px; cursor:pointer;">Excluir</button>
-                `;
-                listaGestor.appendChild(divPreview);
+    // Monitor do Upload
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.id === 'foto-upload') {
+            const arquivos = e.target.files;
+            
+            for (let i = 0; i < arquivos.length; i++) {
+                const leitor = new FileReader();
+                leitor.onload = function(evento) {
+                    const listaEspera = document.getElementById('lista-espera');
+                    if (listaEspera) {
+                        const box = document.createElement('div');
+                        box.style = "border:2px solid #333; padding:10px; background:#f0f0f0; text-align:center;";
+                        box.innerHTML = `
+                            <img src="${evento.target.result}" style="width:100px; height:100px; object-fit:cover; display:block; margin-bottom:5px;">
+                            <button onclick="publicar('${evento.target.result}', this)" style="background:green; color:white; cursor:pointer;">Aprovar ✅</button>
+                        `;
+                        listaEspera.appendChild(box);
+                    }
+                }
+                leitor.readAsDataURL(arquivos[i]);
             }
-            reader.readAsDataURL(files[i]);
+            alert("Fotos enviadas! Abra o 'Acesso Gestor' para aprovar.");
         }
-        alert("Fotos enviadas para análise do gestor!");
     });
 
-    function aprovarFoto(src, btn) {
-        const novaFoto = document.createElement('div');
-        novaFoto.style = "background: #eee; height: 250px; border-radius: 10px; overflow: hidden; position: relative;";
-        novaFoto.innerHTML = `
-            <img src="${src}" style="width:100%; height:100%; object-fit:cover;">
-            <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; padding: 5px; font-size: 0.75rem; text-align: center;">
-                Foto aprovada pelo Gestor
-            </div>
-        `;
-        galeriaVisitantes.appendChild(novaFoto);
-        btn.parentElement.remove(); // Remove do painel de aprovação
+    function publicar(imgSrc, botao) {
+        const mural = document.getElementById('galeria-visitantes');
+        if (mural) {
+            const item = document.createElement('div');
+            item.style = "background: #eee; height: 250px; border-radius: 10px; overflow: hidden;";
+            item.innerHTML = `<img src="${imgSrc}" style="width:100%; height:100%; object-fit:cover;">`;
+            mural.prepend(item);
+            botao.parentElement.remove(); // Remove do painel do gestor
+        }
     }
 </script>
 
@@ -422,46 +422,18 @@
     </section>
     
 <section id="experiencia" style="padding: 60px 0; border-bottom: 2px solid var(--marrom-fundo);">
-        <h2 style="color: var(--marrom-fundo); border-left: 10px solid var(--amarelo-destaque); padding-left: 15px;">📸 Minha Experiência</h2>
+    <h2>📸 Minha Experiência</h2>
+    <div style="background: white; padding: 30px; border-radius: 15px; text-align: center;">
+        <p>Compartilhe sua jornada! Envie até 3 fotos.</p>
         
-        <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 30px; text-align: center;">
-            <p style="line-height: 1.6;">
-                Viveu momentos inesquecíveis na Aldeia Aguapeú? Compartilhe sua jornada conosco! 
-                Cada visitante pode enviar até <strong>03 fotos</strong> da sua experiência literária e fluvial.
-            </p>
-            
-            <div style="margin-top: 20px; padding: 20px; border: 2px dashed #ccc; border-radius: 10px; background: #fafafa;">
-                <input type="file" id="foto-upload" multiple accept="image/*" style="display: none;">
-                <label for="foto-upload" style="background: var(--marrom-fundo); color: var(--amarelo-destaque); padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; display: inline-block;">
-                    Selecionar Fotos (Máx. 3)
-                </label>
-                <p style="font-size: 0.8rem; color: #777; margin-top: 10px;">*As fotos passarão por aprovação do gestor antes de serem publicadas.</p>
-            </div>
-        </div>
+        <input type="file" id="foto-upload" multiple accept="image/*" style="display: block; margin: 20px auto;">
+        
+        <p style="font-size: 0.8rem; color: #777;">*As fotos aparecem após aprovação do gestor.</p>
+    </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;" id="galeria-visitantes">
-            <div style="background: #eee; height: 250px; border-radius: 10px; overflow: hidden; position: relative;">
-                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; padding: 5px; font-size: 0.75rem; text-align: center;">
-                    Foto por Visitante #001
-                </div>
-            </div>
-            <div style="background: #eee; height: 250px; border-radius: 10px; overflow: hidden; position: relative;">
-                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; padding: 5px; font-size: 0.75rem; text-align: center;">
-                    Foto por Visitante #002
-                </div>
-            </div>
-            <div style="background: #eee; height: 250px; border-radius: 10px; overflow: hidden; position: relative;">
-                <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; padding: 5px; font-size: 0.75rem; text-align: center;">
-                    Foto por Visitante #003
-                </div>
-            </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;" id="galeria-visitantes">
         </div>
-
-        <div style="margin-top: 30px; padding: 15px; background: #fff8e1; border-radius: 8px; font-size: 0.85rem; color: #856404; display: flex; align-items: center; gap: 10px;">
-            <span>ℹ️</span>
-            <p style="margin: 0;"><strong>Nota ao Visitante:</strong> Respeite o Guia de Boas Práticas ao selecionar suas fotos. Imagens da Casa de Reza ou rituais sem autorização não serão aprovadas.</p>
-        </div>
-    </section>
+</section>
     
 <section id="musicas" style="padding: 60px 0; border-bottom: 2px solid var(--marrom-fundo);">
         <h2 style="color: var(--marrom-fundo); border-left: 10px solid var(--amarelo-destaque); padding-left: 15px;">🎧 Trilhas de Aguapeú (IA)</h2>
@@ -610,7 +582,4 @@
 </footer>
 
 </body>
-
 </html>
-
-
