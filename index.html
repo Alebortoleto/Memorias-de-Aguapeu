@@ -10,6 +10,7 @@
             --amarelo-destaque: #f1c40f;
             --preto-detalhe: #000000;
             --texto-claro: #fdfaf6;
+            --laranja-acao: #e67e22;
         }
 
         body {
@@ -29,7 +30,7 @@
                 linear-gradient(45deg, transparent 75%, var(--preto-detalhe) 75%),
                 linear-gradient(-45deg, transparent 75%, var(--preto-detalhe) 75%);
             background-size: 40px 40px;
-            padding: 60px 20px;
+            padding: 50px 20px;
             text-align: center;
             border-bottom: 5px solid var(--amarelo-destaque);
         }
@@ -40,6 +41,27 @@
             margin: 0;
             text-transform: uppercase;
             text-shadow: 2px 2px 4px var(--preto-detalhe);
+        }
+
+        /* Botão Encontre meu Dono */
+        .btn-encontre {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: var(--laranja-acao);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            border: 2px solid white;
+        }
+
+        .btn-encontre:hover {
+            transform: scale(1.05);
+            background-color: #d35400;
         }
 
         /* Menu de Navegação Principal */
@@ -71,7 +93,7 @@
             border-radius: 4px;
         }
 
-        /* Painel do Gestor (MONGBeach) */
+        /* Painel do Gestor */
         #admin-panel {
             display: none;
             background: #fff;
@@ -119,7 +141,11 @@
 
 <header>
     <h1>Memórias de Aguapeú</h1>
-    <p style="color: white; letter-spacing: 2px;">Caminhos Literários e Fluviais</p>
+    <p style="color: white; letter-spacing: 2px; margin-bottom: 10px;">Caminhos Literários e Fluviais</p>
+    
+    <a href="https://alebortoleto.github.io/encontre-meu-dono/" target="_blank" class="btn-encontre">
+        🐾 Encontre meu Dono
+    </a>
 </header>
 
 <nav>
@@ -535,4 +561,5 @@
 </footer>
 
 </body>
+
 </html>
