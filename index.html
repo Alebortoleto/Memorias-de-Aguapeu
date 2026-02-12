@@ -159,19 +159,64 @@
     </div>
 
 <script>
+    // Gerenciamento de Senha
     function loginAdmin() {
         const senha = prompt("Acesso MONGBeach - Digite a senha:");
         if (senha === "123Pin567Pin") {
             document.getElementById('admin-panel').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            alert("Acesso liberado, Alessandro!");
         } else {
             alert("Senha incorreta.");
         }
     }
+
     function logoutAdmin() {
         document.getElementById('admin-panel').style.display = 'none';
-        alert("Sessão encerrada.");
+    }
+
+    // Lógica de Upload de Fotos (Sessão 07)
+    const inputFoto = document.getElementById('foto-upload');
+    const galeriaVisitantes = document.getElementById('galeria-visitantes');
+    const listaGestor = document.createElement('div'); // Criando área no painel do gestor
+    listaGestor.id = "gestor-lista-fotos";
+    document.getElementById('admin-panel').appendChild(listaGestor);
+
+    inputFoto.addEventListener('change', function() {
+        const files = this.files;
+        if (files.length > 3) {
+            alert("Máximo de 3 fotos permitido.");
+            return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Criar miniatura para o GESTOR aprovar
+                const divPreview = document.createElement('div');
+                divPreview.style = "display:inline-block; margin:10px; border:1px solid #ccc; padding:5px; text-align:center;";
+                divPreview.innerHTML = `
+                    <img src="${e.target.result}" style="width:100px; height:100px; object-fit:cover; display:block;">
+                    <button onclick="aprovarFoto('${e.target.result}', this)" style="background:green; color:white; border:none; margin-top:5px; cursor:pointer;">Aprovar</button>
+                    <button onclick="this.parentElement.remove()" style="background:red; color:white; border:none; margin-top:5px; cursor:pointer;">Excluir</button>
+                `;
+                listaGestor.appendChild(divPreview);
+            }
+            reader.readAsDataURL(files[i]);
+        }
+        alert("Fotos enviadas para análise do gestor!");
+    });
+
+    function aprovarFoto(src, btn) {
+        const novaFoto = document.createElement('div');
+        novaFoto.style = "background: #eee; height: 250px; border-radius: 10px; overflow: hidden; position: relative;";
+        novaFoto.innerHTML = `
+            <img src="${src}" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; padding: 5px; font-size: 0.75rem; text-align: center;">
+                Foto aprovada pelo Gestor
+            </div>
+        `;
+        galeriaVisitantes.appendChild(novaFoto);
+        btn.parentElement.remove(); // Remove do painel de aprovação
     }
 </script>
 
@@ -567,4 +612,5 @@
 </body>
 
 </html>
+
 
