@@ -59,12 +59,9 @@
             border: 2px solid white;
         }
 
-        .btn-encontre:hover {
-            transform: scale(1.05);
-            background-color: #d35400;
-        }
+        .btn-encontre:hover { transform: scale(1.05); background-color: #d35400; }
 
-        /* Menu de Navegação Principal */
+        /* Menu de Navegação */
         nav {
             background-color: var(--preto-detalhe);
             padding: 10px 0;
@@ -83,14 +80,7 @@
             font-weight: bold;
             font-size: 0.8rem;
             padding: 5px 10px;
-            transition: 0.3s;
             text-transform: uppercase;
-        }
-
-        nav a:hover {
-            background-color: var(--marrom-fundo);
-            color: white;
-            border-radius: 4px;
         }
 
         /* Painel do Gestor */
@@ -117,13 +107,8 @@
             border-radius: 30px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 20px;
-        }
+        .container { max-width: 1100px; margin: auto; padding: 20px; }
 
-        /* Créditos Fixos no Rodapé */
         .footer-dev {
             position: fixed;
             bottom: 10px;
@@ -142,22 +127,19 @@
 <header>
     <h1>Memórias de Aguapeú</h1>
     <p style="color: white; letter-spacing: 2px; margin-bottom: 10px;">Caminhos Literários e Fluviais</p>
-    
-    <a href="https://alebortoleto.github.io/encontre-meu-dono/" target="_blank" class="btn-encontre">
-        🐾 Encontre meu Dono
-    </a>
+    <a href="https://alebortoleto.github.io/encontre-meu-dono/" target="_blank" class="btn-encontre">🐾 Encontre meu Dono</a>
 </header>
 
 <nav>
     <a href="#passeio">Passeio no Rio</a>
-    <a href="#boas-praticas">Guia de Boas Práticas</a>
-    <a href="#almoco">Almoço no Local</a>
-    <a href="#artesanato">Venda de Artesanato</a>
-    <a href="#audiovisual">Projeto Audiovisual</a>
+    <a href="#boas-praticas">Boas Práticas</a>
+    <a href="#almoco">Almoço</a>
+    <a href="#artesanato">Artesanato</a>
+    <a href="#audiovisual">Audiovisual</a>
     <a href="#experiencia">Minha Experiência</a>
     <a href="#musicas">Músicas IA</a>
-    <a href="#cultura">Cultura Local</a>
-    <a href="#animais">Ajude Nossos Animais</a>
+    <a href="#cultura">Cultura</a>
+    <a href="#animais">Ajude Animais</a>
 </nav>
 
 <button class="login-trigger" onclick="loginAdmin()">Acesso Gestor</button>
@@ -168,8 +150,30 @@
         <button onclick="logoutAdmin()" style="background:#c0392b; color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">Sair</button>
     </div>
     <hr>
-    <p>Área de controle: liberação de fotos, ingressos e downloads de música.</p>
+    <p>Área de controle: fotos, ingressos e downloads de música. (Senha: 123Pin567Pin)</p>
 </div>
+
+<div class="container">
+    <div class="footer-dev">
+        desenvolvido por mongbeach (13) 99175-3601
+    </div>
+
+<script>
+    function loginAdmin() {
+        const senha = prompt("Acesso MONGBeach - Digite a senha:");
+        if (senha === "123Pin567Pin") {
+            document.getElementById('admin-panel').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            alert("Acesso liberado, Alessandro!");
+        } else {
+            alert("Senha incorreta.");
+        }
+    }
+    function logoutAdmin() {
+        document.getElementById('admin-panel').style.display = 'none';
+        alert("Sessão encerrada.");
+    }
+</script>
 
 <div class="container">
  
@@ -563,3 +567,4 @@
 </body>
 
 </html>
+
